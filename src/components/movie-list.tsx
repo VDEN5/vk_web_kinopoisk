@@ -3,7 +3,7 @@ import { MovieProps } from '../types/movie-type';
 import { AppRoute } from '../const';
 import { Link } from 'react-router-dom';
 import { useFavorites } from './favorite-store';
-import { Modal } from 'react-bootstrap'; // Или ваш UI-фреймворк для модалок
+import { Modal } from 'react-bootstrap'; 
 
 const PLACEHOLDER_IMAGE = 'https://yastatic.net/s3/kinopoisk-frontend/common-static/img/projector-logo/placeholder.svg';
 
@@ -19,10 +19,8 @@ export function MovieList({ movies, showFavoriteButton = true }: MovieListProps)
 
     const handleFavoriteClick = (movie: MovieProps) => {
         if (isFavorite(movie.id)) {
-            // Если уже в избранном - удаляем сразу без подтверждения
             toggleFavorite(movie);
         } else {
-            // Если не в избранном - показываем модалку для подтверждения
             setSelectedMovie(movie);
             setShowModal(true);
         }

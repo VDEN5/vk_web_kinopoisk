@@ -104,7 +104,7 @@ export const getMovies: (
               query += `&genres.name=${encodeURIComponent(genre)}`;
             });
           }
-    } //query += `&genres.name=${encodeURIComponent(genreName)}`;
+    } 
     if (Rating){
         const [minRating, maxRating] = Rating.split('-').map(Number);
         query += `&rating.imdb=${encodeURIComponent(Rating)}`;
@@ -113,12 +113,10 @@ export const getMovies: (
         query += `&countries.name=${encodeURIComponent(countryName)}`;
     if (years) {
         const [startYear, endYear] = years.split('-').map(Number);
-        // Генерируем параметры для каждого года в диапазоне
         for (let year = startYear; year <= endYear; year++) {
             query += `&year=${year}`;
         }
     }
-    console.log(query)
 
     return api.get<MoviePage>(query);
 };

@@ -16,7 +16,6 @@ export function MoviesList1() {
     const fetchFavoriteMovies = useCallback(async () => {
         setLoading(true);
         try {
-            // Получаем все избранные фильмы из хранилища
             const favoriteMovies = getAllFavorites();
             setMovies(favoriteMovies);
         } catch (err) {
@@ -55,7 +54,6 @@ export function MoviesList1() {
                 <MovieList 
                     movies={movies} 
                     showFavoriteButton={true} 
-                    // initialFavoriteIds={movies.map(movie => movie.id)}
                 />
             ) : (
                 <div className="alert alert-warning">

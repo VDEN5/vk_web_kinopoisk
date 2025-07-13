@@ -33,11 +33,10 @@ export function MoviesList() {
     const [hasMore, setHasMore] = useState(true);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [searchQuery, setSearchQuery] = useState<string>('');
-    // const [selectedGenre, setSelectedGenre] = useState<string>('');
     const [selectedCountry, setSelectedCountry] = useState<string>('');
     const [selectedRating, setSelectedRating] = useState<string>('');
     const [selectedYears, setSelectedYears] = useState<string>('');
-    const [selectedGenre, setSelectedGenre] = useState<string[]>([]); // Было string, теперь string[]
+    const [selectedGenre, setSelectedGenre] = useState<string[]>([]); 
     const [selectedAge, setSelectedAge] = useState<string>('');
     const [limit, setLimit] = useState<number>(10);
     const navigate = useNavigate();
@@ -102,7 +101,6 @@ export function MoviesList() {
 
     const fetchMovies = useCallback(async () => {
         setLoading(true);
-        console.log(selectedGenre)
         try {
             const response = await getMovies(
                 currentPage.toString(),
@@ -113,7 +111,6 @@ export function MoviesList() {
                 selectedRating,
                 selectedYears
             );
-            console.log(response.data)
             setMovies(response.data.docs);
             setNumberOfPages(response.data.pages);
         } catch (err) {
@@ -182,20 +179,6 @@ export function MoviesList() {
         setLimit(newLimit);
     }, [searchParams]);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            console.log('Текущая позиция скролла:', window.scrollY);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-
-        // Очистка при размонтировании
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
-
-    // Функция для загрузки дополнительных фильмов
     const loadMoreMovies = useCallback(async () => {
         if (isLoadingMore || !hasMore) return;
         
@@ -208,7 +191,7 @@ export function MoviesList() {
             
             const newMovies = response.data.docs;
             setAllMovies(prev => [...prev, ...newMovies]);
-            setVisibleMovies(prev => [...prev, ...newMovies.slice(0, 10)]); // Добавляем по 10 фильмов
+            setVisibleMovies(prev => [...prev, ...newMovies.slice(0, 10)]); 
             setNumberOfPages(response.data.pages);
             setCurrentPage(nextPage);
             setHasMore(newMovies.length > 0);
@@ -219,7 +202,6 @@ export function MoviesList() {
         }
     }, [currentPage, limit, selectedAge, selectedGenre, selectedCountry, selectedRating, selectedYears, searchQuery, isLoadingMore, hasMore]);
 
-    // Обработчик скролла с бесконечной подгрузкой
     useEffect(() => {
         const handleScroll = debounce(() => {
             const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
@@ -234,7 +216,6 @@ export function MoviesList() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [loadMoreMovies, isLoadingMore, hasMore]);
 
-    // Инициализация и сброс при изменении параметров
     useEffect(() => {
         const fetchInitialMovies = async () => {
             setLoading(true);
@@ -245,7 +226,7 @@ export function MoviesList() {
                     : await getMovies('1', limit.toString(), selectedAge, selectedGenre, selectedCountry, selectedRating, selectedYears);
                 
                 setAllMovies(response.data.docs);
-                setVisibleMovies(response.data.docs.slice(0, 10)); // Начальная загрузка 10 фильмов
+                setVisibleMovies(response.data.docs.slice(0, 10)); 
                 setNumberOfPages(response.data.pages);
                 setCurrentPage(1);
             } catch (err) {
@@ -282,8 +263,6 @@ export function MoviesList() {
     };
 
     const handleGenreChange = (genres: string[]) => {
-        // console.log(genres, selectedGenre)
-        // selectedGenre.push(genres[0])
         setSelectedGenre(selectedGenre.concat(genres));
         setSearchQuery('');
         fetchMovies();

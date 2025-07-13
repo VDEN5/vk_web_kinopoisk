@@ -24,9 +24,6 @@ export const Movie = () => {
                     setLoading(true);
                     const response = await getMovieById(id);
                     setMovie(response.data);
-                    
-                    // Выводим информацию о фильме в консоль
-                    console.log('Информация о фильме:', response.data);
                 } catch (err) {
                     setError('Error fetching movie');
                     console.error('Ошибка при загрузке фильма:', err);

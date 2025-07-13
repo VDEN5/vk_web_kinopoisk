@@ -1,6 +1,5 @@
-// favorites-store.ts
 import { useState } from 'react';
-import { MovieProps } from '../types/movie-type'; // Убедитесь, что путь правильный
+import { MovieProps } from '../types/movie-type'; 
 
 export const useFavorites = () => {
     const [favorites, setFavorites] = useState<MovieProps[]>(() => {

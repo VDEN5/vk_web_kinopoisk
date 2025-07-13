@@ -11,7 +11,7 @@
 2. Клонировать этот репозиторий
 
 ```
-https://github.com/VDEN5/vk_web_kinopoisk
+git clone https://github.com/VDEN5/vk_web_kinopoisk
 ```
 
 3. Перейти в папку репозитория
@@ -26,7 +26,9 @@ cd vk_web_kinopoisk
 npm i
 ```
 
-5. Запуск
+5. Создать в корне проекта файл с названием .env и заполнить его данными, согласно .env.default, нужно всего лишь поставить свой апи-ключ (врятли мне стоит показывать свой)
+
+6. Запуск
 ```
-$env:TOKEN="<токен кинопоиска>"; npm start
+npm start
 ```
