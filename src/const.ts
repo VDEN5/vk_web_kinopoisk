@@ -4,7 +4,7 @@ export enum AppRoute {
     Root = '/',
     Movie = '/movie/:id',
     Login = '/login',
-    Favorite = '/favorite'
+    Favorite = '/favorite',
 }
 
 export enum AuthorizationStatus {

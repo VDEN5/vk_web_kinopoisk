@@ -5,7 +5,8 @@ import { getMovieById } from '../api/api';
 import { MovieProps } from '../types/movie-type';
 import { AppRoute } from '../const';
 
-const DEFAULT_POSTER = 'https://yastatic.net/s3/kinopoisk-frontend/common-static/img/projector-logo/placeholder.svg';
+const DEFAULT_POSTER =
+    'https://yastatic.net/s3/kinopoisk-frontend/common-static/img/projector-logo/placeholder.svg';
 
 export const Movie = () => {
     const { id } = useParams<{ id: string }>();
@@ -40,10 +41,8 @@ export const Movie = () => {
     if (!movie)
         return <div className="alert alert-warning">Movie not found.</div>;
 
-    const currentActors = movie.persons?.slice(
-        indexOfFirstActor,
-        indexOfLastActor
-    ) || [];
+    const currentActors =
+        movie.persons?.slice(indexOfFirstActor, indexOfLastActor) || [];
 
     const similarMoviesPosters =
         movie.similarMovies
@@ -63,11 +62,11 @@ export const Movie = () => {
                 Назад
             </Link>
             <h1>{movie.name || movie.alternativeName}</h1>
-            
+
             {/* Блок с основной информацией */}
             <div className="row mb-4">
                 <div className="col-md-4">
-                <img
+                    <img
                         src={movie.poster?.url || DEFAULT_POSTER}
                         alt={movie.name || movie.alternativeName}
                         className="img-fluid rounded"
@@ -82,18 +81,23 @@ export const Movie = () => {
                         <h3>Описание</h3>
                         <p>{movie.description || 'Нет описания'}</p>
                     </div>
-                    
+
                     <div className="mb-3">
                         <h3>Краткое описание</h3>
-                        <p>{movie.shortDescription || 'Нет краткого описания'}</p>
+                        <p>
+                            {movie.shortDescription || 'Нет краткого описания'}
+                        </p>
                     </div>
-                    
+
                     <div className="mb-3">
                         <h3>Жанры</h3>
                         {movie.genres?.length > 0 ? (
                             <div className="d-flex flex-wrap gap-2">
                                 {movie.genres.map((genre, index) => (
-                                    <span key={index} className="badge bg-primary">
+                                    <span
+                                        key={index}
+                                        className="badge bg-primary"
+                                    >
                                         {genre.name}
                                     </span>
                                 ))}
@@ -102,15 +106,19 @@ export const Movie = () => {
                             <p>Нет информации о жанрах</p>
                         )}
                     </div>
-                    
+
                     <div className="mb-3">
                         <h3>Год выпуска</h3>
                         <p>{movie.year || 'Неизвестно'}</p>
                     </div>
-                    
+
                     <div className="mb-3">
                         <h3>Рейтинг</h3>
-                        <p>{movie.rating?.kp ? `${movie.rating.kp}/10` : 'Нет информации'}</p>
+                        <p>
+                            {movie.rating?.kp
+                                ? `${movie.rating.kp}/10`
+                                : 'Нет информации'}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -136,13 +144,12 @@ export const Movie = () => {
                                 )
                         )}
                     </ul>
-                    
                 </>
             ) : (
                 <div className="alert alert-secondary">
                     Нет информации об актерах
                 </div>
-            )}            
+            )}
         </div>
     );
 };

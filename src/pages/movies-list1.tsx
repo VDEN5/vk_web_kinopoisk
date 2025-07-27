@@ -39,22 +39,20 @@ export function MoviesList1() {
     if (error) {
         return (
             <div className="alert alert-danger">
-                Ошибка: {error instanceof Error ? error.message : 'Произошла ошибка'}
+                Ошибка:{' '}
+                {error instanceof Error ? error.message : 'Произошла ошибка'}
             </div>
         );
     }
 
     return (
         <div className="container mt-3">
-                        <Link to={AppRoute.Root} className="btn btn-primary mb-3">
-                            Назад
-                        </Link>
+            <Link to={AppRoute.Root} className="btn btn-primary mb-3">
+                Назад
+            </Link>
             <h1 className="text-center">Мои избранные фильмы</h1>
             {movies.length > 0 ? (
-                <MovieList 
-                    movies={movies} 
-                    showFavoriteButton={true} 
-                />
+                <MovieList movies={movies} showFavoriteButton={true} />
             ) : (
                 <div className="alert alert-warning">
                     У вас пока нет избранных фильмов

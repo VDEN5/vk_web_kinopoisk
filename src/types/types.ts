@@ -20,8 +20,6 @@ export type ImagesUrlProps = {
     id: number;
 };
 
-
-
 export type Genre = {
     name: string;
     slug: string;
@@ -36,7 +34,6 @@ export type ContentType = {
     name: string;
     slug: string;
 };
-
 
 export type SearchBarProps = {
     searchQuery: string;

@@ -63,8 +63,6 @@ type Person = {
     enProfession: string;
 };
 
-
-
 type Money = {
     value: number;
     currency: string;

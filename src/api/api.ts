@@ -98,14 +98,14 @@ export const getMovies: (
 ) => {
     let query = `/movie?page=${pageNumber}&limit=${limit}`;
     if (ageRating) query += `&ageRating=${ageRating}`;
-    if (genreName){
+    if (genreName) {
         if (genreName.length > 0) {
-            genreName.forEach(genre => {
-              query += `&genres.name=${encodeURIComponent(genre)}`;
+            genreName.forEach((genre) => {
+                query += `&genres.name=${encodeURIComponent(genre)}`;
             });
-          }
-    } 
-    if (Rating){
+        }
+    }
+    if (Rating) {
         const [minRating, maxRating] = Rating.split('-').map(Number);
         query += `&rating.imdb=${encodeURIComponent(Rating)}`;
     }
@@ -121,9 +121,7 @@ export const getMovies: (
     return api.get<MoviePage>(query);
 };
 
-export const getMovieById: (
-    id: string
-) => Promise = (id: string) =>
+export const getMovieById: (id: string) => Promise = (id: string) =>
     api.get(`/movie/${id}`);
 
 export const getMoviesByName: (
@@ -138,7 +136,6 @@ export const getMoviesByName: (
     api.get<MoviePage>(
         `/movie/search?page=${pageNumber}&limit=${limit}&query=${name}`
     );
-
 
 export const getStudios: (
     pageNumber: string,
@@ -162,5 +159,3 @@ export const getContentType: () => Promise<
     AxiosResponse<ContentType[], unknown>
 > = () =>
     apiV1.get<ContentType[]>(`/movie/possible-values-by-field?field=type`);
-
-

@@ -36,9 +36,9 @@ export function MoviesList() {
     const [selectedCountry, setSelectedCountry] = useState<string>('');
     const [selectedRating, setSelectedRating] = useState<string>('');
     const [selectedYears, setSelectedYears] = useState<string>('');
-    const [selectedGenre, setSelectedGenre] = useState<string[]>([]); 
+    const [selectedGenre, setSelectedGenre] = useState<string[]>([]);
     const [selectedAge, setSelectedAge] = useState<string>('');
-    const [limit, setLimit] = useState<number>(10);
+    const [limit, setLimit] = useState<number>(50);
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [genres, setGenres] = useState<Genre[]>([]);
@@ -118,8 +118,15 @@ export function MoviesList() {
         } finally {
             setLoading(false);
         }
-    }, [currentPage, limit, selectedAge, selectedGenre, selectedCountry, selectedRating, selectedYears]);
-    
+    }, [
+        currentPage,
+        limit,
+        selectedAge,
+        selectedGenre,
+        selectedCountry,
+        selectedRating,
+        selectedYears,
+    ]);
 
     const debouncedFetchMoviesByName = useCallback(
         debounce(async (name: string) => {
@@ -173,7 +180,7 @@ export function MoviesList() {
 
     useEffect(() => {
         const newPage = parseInt(searchParams.get('page') || '1', 10);
-        const newLimit = parseInt(searchParams.get('limit') || '10', 10);
+        const newLimit = parseInt(searchParams.get('limit') || '50', 10);
         fetchMovies();
         setCurrentPage(newPage);
         setLimit(newLimit);
@@ -181,37 +188,72 @@ export function MoviesList() {
 
     const loadMoreMovies = useCallback(async () => {
         if (isLoadingMore || !hasMore) return;
-        
+
+        // Сохраняем текущую позицию скролла
+        const scrollPosition = window.scrollY;
+        // Отключаем скролл
+        document.body.style.overflow = 'hidden';
+
         setIsLoadingMore(true);
         try {
             const nextPage = currentPage + 1;
-            const response = searchQuery 
-                ? await getMoviesByName(nextPage.toString(), limit.toString(), searchQuery)
-                : await getMovies(nextPage.toString(), limit.toString(), selectedAge, selectedGenre, selectedCountry, selectedRating, selectedYears);
-            
+            const response = searchQuery
+                ? await getMoviesByName(
+                      nextPage.toString(),
+                      limit.toString(),
+                      searchQuery
+                  )
+                : await getMovies(
+                      nextPage.toString(),
+                      limit.toString(),
+                      selectedAge,
+                      selectedGenre,
+                      selectedCountry,
+                      selectedRating,
+                      selectedYears
+                  );
+
             const newMovies = response.data.docs;
-            setAllMovies(prev => [...prev, ...newMovies]);
-            setVisibleMovies(prev => [...prev, ...newMovies.slice(0, 10)]); 
+            setAllMovies((prev) => [...prev, ...newMovies]);
+            setVisibleMovies((prev) => [...prev, ...newMovies.slice(0, limit)]);
             setNumberOfPages(response.data.pages);
             setCurrentPage(nextPage);
             setHasMore(newMovies.length > 0);
         } catch (err) {
             console.error('Ошибка загрузки фильмов:', err);
         } finally {
-            setIsLoadingMore(false);
+            // Восстанавливаем скролл после небольшой задержки
+            setTimeout(() => {
+                document.body.style.overflow = '';
+                console.log(scrollPosition);
+                window.scrollTo(0, 200);
+                setIsLoadingMore(false);
+            }, 100); // Небольшая задержка для плавности
         }
-    }, [currentPage, limit, selectedAge, selectedGenre, selectedCountry, selectedRating, selectedYears, searchQuery, isLoadingMore, hasMore]);
+    }, [
+        currentPage,
+        limit,
+        selectedAge,
+        selectedGenre,
+        selectedCountry,
+        selectedRating,
+        selectedYears,
+        searchQuery,
+        isLoadingMore,
+        hasMore,
+    ]);
 
     useEffect(() => {
         const handleScroll = debounce(() => {
-            const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+            const { scrollTop, scrollHeight, clientHeight } =
+                document.documentElement;
             const isNearBottom = scrollTop + clientHeight >= scrollHeight - 200;
-            
+
             if (isNearBottom && !isLoadingMore && hasMore) {
                 loadMoreMovies();
             }
         }, 200);
-        
+
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [loadMoreMovies, isLoadingMore, hasMore]);
@@ -221,12 +263,20 @@ export function MoviesList() {
             setLoading(true);
             setHasMore(true);
             try {
-                const response = searchQuery 
+                const response = searchQuery
                     ? await getMoviesByName('1', limit.toString(), searchQuery)
-                    : await getMovies('1', limit.toString(), selectedAge, selectedGenre, selectedCountry, selectedRating, selectedYears);
-                
+                    : await getMovies(
+                          '1',
+                          limit.toString(),
+                          selectedAge,
+                          selectedGenre,
+                          selectedCountry,
+                          selectedRating,
+                          selectedYears
+                      );
+
                 setAllMovies(response.data.docs);
-                setVisibleMovies(response.data.docs.slice(0, 10)); 
+                setVisibleMovies(response.data.docs.slice(0, 50));
                 setNumberOfPages(response.data.pages);
                 setCurrentPage(1);
             } catch (err) {
@@ -237,7 +287,15 @@ export function MoviesList() {
         };
 
         fetchInitialMovies();
-    }, [selectedAge, selectedGenre, selectedCountry, selectedRating, selectedYears, limit, searchQuery]);
+    }, [
+        selectedAge,
+        selectedGenre,
+        selectedCountry,
+        selectedRating,
+        selectedYears,
+        limit,
+        searchQuery,
+    ]);
 
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newQuery = e.target.value;
@@ -266,7 +324,7 @@ export function MoviesList() {
         setSelectedGenre(selectedGenre.concat(genres));
         setSearchQuery('');
         fetchMovies();
-      };
+    };
 
     const handleCountryChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setSelectedCountry(e.target.value);
@@ -315,8 +373,8 @@ export function MoviesList() {
     return (
         <div className="container mt-3">
             <Link to={AppRoute.Favorite} className="btn btn-primary mb-3">
-                            Избранные фильмы
-                        </Link>
+                Избранные фильмы
+            </Link>
             <h1 className="text-center">Список фильмов</h1>
             <SearchBar
                 searchQuery={searchQuery}
@@ -344,7 +402,7 @@ export function MoviesList() {
                     </div>
                 </div>
             )}
-            
+
             {!hasMore && !isLoadingMore && (
                 <div className="text-center my-4 text-muted">
                     Вы достигли конца списка
